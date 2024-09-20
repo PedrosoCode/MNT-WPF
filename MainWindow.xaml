@@ -1,0 +1,11 @@
+﻿<Window x:Class="MNT.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Página Inicial" Height="300" Width="400">
+    <Grid>
+        <Label Content="Bem-vindo! Escolha uma opção:" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,40,0,0" FontSize="16" />
+
+        <Button Content="Login" HorizontalAlignment="Left" Margin="80,120,0,0" VerticalAlignment="Top" Width="100" Height="40" Click="Login_Click"/>
+        <Button Content="Cadastro" HorizontalAlignment="Left" Margin="220,120,0,0" VerticalAlignment="Top" Width="100" Height="40" Click="Cadastro_Click"/>
+    </Grid>
+</Window>
