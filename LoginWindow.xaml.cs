@@ -2,6 +2,7 @@
 using System;
 using System.Configuration;
 using System.Windows;
+using BCrypt.Net; // Biblioteca BCrypt
 
 namespace MNT
 {
@@ -16,32 +17,37 @@ namespace MNT
         {
             string usuario = txtUsuario.Text;
             string senha = txtSenha.Password;
+            string senhaCriptografada = "";
 
             try
             {
                 using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["PostgreSQLConnection"].ConnectionString))
                 {
                     conn.Open();
-                    using (var cmd = new NpgsqlCommand("CALL sp_verificar_login(@p_usuario, @p_senha, @login_valido)", conn))
+                    using (var cmd = new NpgsqlCommand("SELECT senha FROM usuarios WHERE usuario = @p_usuario", conn))
                     {
                         cmd.Parameters.AddWithValue("p_usuario", usuario);
-                        cmd.Parameters.AddWithValue("p_senha", senha);
 
-                        // Parâmetro de saída
-                        var loginValido = cmd.Parameters.Add("login_valido", NpgsqlTypes.NpgsqlDbType.Boolean);
-                        loginValido.Direction = System.Data.ParameterDirection.Output;
-
-                        cmd.ExecuteNonQuery();
-
-                        // Verificando o valor de saída
-                        if ((bool)loginValido.Value)
+                        var result = cmd.ExecuteReader();
+                        if (result.Read())
                         {
-                            MessageBox.Show("Login bem-sucedido!");
+                            senhaCriptografada = result["senha"].ToString(); // Pegamos a senha criptografada do banco
                         }
                         else
                         {
-                            MessageBox.Show("Usuário ou senha incorretos.");
+                            MessageBox.Show("Usuário não encontrado.");
+                            return;
                         }
+                    }
+
+                    // Verificar a senha com BCrypt
+                    if (BCrypt.Net.BCrypt.Verify(senha, senhaCriptografada))
+                    {
+                        MessageBox.Show("Login bem-sucedido!");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Senha incorreta.");
                     }
                 }
             }

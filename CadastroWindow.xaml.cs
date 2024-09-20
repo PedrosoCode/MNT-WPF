@@ -2,6 +2,7 @@
 using System;
 using System.Configuration;
 using System.Windows;
+using BCrypt.Net; // Biblioteca BCrypt
 
 namespace MNT
 {
@@ -24,6 +25,9 @@ namespace MNT
                 return;
             }
 
+            // Criptografar a senha com BCrypt
+            string senhaCriptografada = BCrypt.Net.BCrypt.HashPassword(senha);
+
             try
             {
                 using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["PostgreSQLConnection"].ConnectionString))
@@ -32,7 +36,7 @@ namespace MNT
                     using (var cmd = new NpgsqlCommand("CALL sp_inserir_usuario(@p_usuario, @p_senha)", conn))
                     {
                         cmd.Parameters.AddWithValue("p_usuario", usuario);
-                        cmd.Parameters.AddWithValue("p_senha", senha);
+                        cmd.Parameters.AddWithValue("p_senha", senhaCriptografada); // Usando a senha criptografada
                         cmd.ExecuteNonQuery();
                     }
                 }
