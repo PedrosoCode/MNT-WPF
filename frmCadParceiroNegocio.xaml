@@ -1,0 +1,44 @@
+﻿<Window x:Class="MNT.frmCadParceiroNegocio"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Cadastro de Parceiros de Negócio" Height="450" Width="800" WindowState="Maximized">
+    <Grid>
+        <!-- Campos de Filtro -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10">
+            <TextBlock Text="Nome Fantasia:" VerticalAlignment="Center" Margin="5"/>
+            <TextBox x:Name="txtNomeFantasia" Width="150" Margin="5"/>
+            <TextBlock Text="Razão Social:" VerticalAlignment="Center" Margin="5"/>
+            <TextBox x:Name="txtRazaoSocial" Width="150" Margin="5"/>
+            <TextBlock Text="CNPJ/CPF:" VerticalAlignment="Center" Margin="5"/>
+            <TextBox x:Name="txtCnpjCpf" Width="150" Margin="5"/>
+            <Button Content="Filtrar" Width="100" Margin="10" Click="Filtrar_Click"/>
+        </StackPanel>
+
+        <!-- Grid para Listar Parceiros -->
+        <DataGrid x:Name="dataGridParceiros" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,50,10,10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Nome Fantasia" Binding="{Binding NomeFantasia}" Width="*"/>
+                <DataGridTextColumn Header="Razão Social" Binding="{Binding RazaoSocial}" Width="*"/>
+                <DataGridTextColumn Header="CNPJ/CPF" Binding="{Binding CnpjCpf}" Width="*"/>
+
+                <!-- Coluna de Botão Editar -->
+                <DataGridTemplateColumn Header="Editar" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Editar" Click="Editar_Click" Tag="{Binding Codigo}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Coluna de Botão Excluir -->
+                <DataGridTemplateColumn Header="Excluir" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Excluir" Click="Excluir_Click" Tag="{Binding Codigo}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

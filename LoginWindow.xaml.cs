@@ -43,7 +43,10 @@ namespace MNT
                     // Verificar a senha com BCrypt
                     if (BCrypt.Net.BCrypt.Verify(senha, senhaCriptografada))
                     {
-                        MessageBox.Show("Login bem-sucedido!");
+                        // Fechar janela de login e abrir a Home
+                        HomeWindow home = new HomeWindow();
+                        home.Show();
+                        this.Close();
                     }
                     else
                     {
