@@ -21,20 +21,20 @@
                 <DataGridTextColumn Header="Razão Social" Binding="{Binding RazaoSocial}" Width="*"/>
                 <DataGridTextColumn Header="CNPJ/CPF" Binding="{Binding CnpjCpf}" Width="*"/>
 
-                <!-- Coluna de Botão Editar -->
-                <DataGridTemplateColumn Header="Editar" Width="100">
+                <!-- Coluna de Ícone Editar -->
+                <DataGridTemplateColumn Header="Editar" Width="50">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Editar" Click="Editar_Click" Tag="{Binding Codigo}" />
+                            <Image Source="pack://application:,,,/imgs/editIcon.png" Width="24" Height="24" Cursor="Hand" MouseDown="Editar_Click" Tag="{Binding Codigo}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <!-- Coluna de Botão Excluir -->
-                <DataGridTemplateColumn Header="Excluir" Width="100">
+                <!-- Coluna de Ícone Excluir -->
+                <DataGridTemplateColumn Header="Excluir" Width="50">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Excluir" Click="Excluir_Click" Tag="{Binding Codigo}" />
+                            <Image Source="pack://application:,,,/imgs/deleteIcon.png" Width="24" Height="24" Cursor="Hand" MouseDown="Excluir_Click" Tag="{Binding Codigo}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

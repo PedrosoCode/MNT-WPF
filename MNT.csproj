@@ -9,6 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="imgs\deleteIcon.png" />
+    <None Remove="imgs\editICon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="imgs\deleteIcon.png" />
+    <Resource Include="imgs\editICon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Npgsql" Version="8.0.4" />
   </ItemGroup>

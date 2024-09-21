@@ -5,31 +5,32 @@ using System.Configuration;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MNT
 {
     public partial class frmCadParceiroNegocio : Window
     {
-        private int? codigoParceiro; // Código do parceiro, opcional
+        private int? codigoParceiro; // Variável para armazenar o código do parceiro, se houver
 
-        // Construtor padrão sem parâmetros
+        // Construtor padrão
         public frmCadParceiroNegocio()
         {
             InitializeComponent();
         }
 
-        // Construtor que aceita o código do parceiro
+        // Construtor que aceita um parâmetro (o código do parceiro)
         public frmCadParceiroNegocio(int codigoParceiro)
         {
             InitializeComponent();
             this.codigoParceiro = codigoParceiro;
 
-            // Carregar os dados do parceiro com base no código
+            // Carregar dados do parceiro com base no código
             CarregarDadosParceiro(codigoParceiro);
         }
 
-        // Método para carregar os dados do parceiro (você pode adaptar isso conforme sua necessidade)
-        private void CarregarDadosParceiro(int codigoParceiro)
+        // Método para carregar dados do parceiro para edição
+        private void CarregarDadosParceiro(int codigo)
         {
             try
             {
@@ -38,7 +39,7 @@ namespace MNT
                     conn.Open();
                     using (var cmd = new NpgsqlCommand("SELECT * FROM tb_cad_parceiro_negocio WHERE codigo = @codigo", conn))
                     {
-                        cmd.Parameters.AddWithValue("codigo", codigoParceiro);
+                        cmd.Parameters.AddWithValue("codigo", codigo);
                         using (var reader = cmd.ExecuteReader())
                         {
                             if (reader.Read())
@@ -65,7 +66,6 @@ namespace MNT
 
             try
             {
-                // Limpar a grid antes de fazer uma nova busca
                 dataGridParceiros.ItemsSource = new List<ParceiroNegocio>();
 
                 using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["PostgreSQLConnection"].ConnectionString))
@@ -73,7 +73,6 @@ namespace MNT
                     conn.Open();
                     using (var cmd = new NpgsqlCommand("SELECT * FROM fn_select_parceiro_negocio_grid(@p_nome_fantasia, @p_razao_social, @p_cnpj_cpf)", conn))
                     {
-                        // Adicionando parâmetros
                         cmd.Parameters.AddWithValue("p_nome_fantasia", string.IsNullOrEmpty(nomeFantasia) ? (object)DBNull.Value : nomeFantasia);
                         cmd.Parameters.AddWithValue("p_razao_social", string.IsNullOrEmpty(razaoSocial) ? (object)DBNull.Value : razaoSocial);
                         cmd.Parameters.AddWithValue("p_cnpj_cpf", string.IsNullOrEmpty(cnpjCpf) ? (object)DBNull.Value : cnpjCpf);
@@ -82,7 +81,6 @@ namespace MNT
                         DataTable dt = new DataTable();
                         da.Fill(dt);
 
-                        // Preencher a grid com os dados retornados
                         List<ParceiroNegocio> parceiros = new List<ParceiroNegocio>();
                         foreach (DataRow row in dt.Rows)
                         {
@@ -105,21 +103,21 @@ namespace MNT
         }
 
         // Evento para editar o parceiro
-        private void Editar_Click(object sender, RoutedEventArgs e)
+        private void Editar_Click(object sender, MouseButtonEventArgs e)
         {
-            Button button = (Button)sender;
-            int codigoParceiro = (int)button.Tag;
+            Image image = (Image)sender;
+            int codigoParceiro = (int)image.Tag;
 
-            // Abrir uma nova aba de edição passando o código do parceiro
+            // Instanciar a janela de edição passando o código do parceiro
             frmCadParceiroNegocio editarParceiroWindow = new frmCadParceiroNegocio(codigoParceiro);
             editarParceiroWindow.Show();
         }
 
         // Evento para excluir o parceiro
-        private void Excluir_Click(object sender, RoutedEventArgs e)
+        private void Excluir_Click(object sender, MouseButtonEventArgs e)
         {
-            Button button = (Button)sender;
-            int codigoParceiro = (int)button.Tag;
+            Image image = (Image)sender;
+            int codigoParceiro = (int)image.Tag;
 
             MessageBoxResult result = MessageBox.Show("Tem certeza que deseja excluir este parceiro?", "Confirmar Exclusão", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result == MessageBoxResult.Yes)
@@ -136,7 +134,6 @@ namespace MNT
                         }
                     }
 
-                    // Recarregar a grid após a exclusão
                     Filtrar_Click(null, null);
                 }
                 catch (Exception ex)
@@ -147,7 +144,6 @@ namespace MNT
         }
     }
 
-    // Modelo de dados do parceiro
     public class ParceiroNegocio
     {
         public int Codigo { get; set; }
