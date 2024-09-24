@@ -3,42 +3,61 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Cadastro de Parceiros de Negócio" Height="450" Width="800" WindowState="Maximized">
     <Grid>
-        <!-- Campos de Filtro -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10">
-            <TextBlock Text="Nome Fantasia:" VerticalAlignment="Center" Margin="5"/>
-            <TextBox x:Name="txtNomeFantasia" Width="150" Margin="5"/>
-            <TextBlock Text="Razão Social:" VerticalAlignment="Center" Margin="5"/>
-            <TextBox x:Name="txtRazaoSocial" Width="150" Margin="5"/>
-            <TextBlock Text="CNPJ/CPF:" VerticalAlignment="Center" Margin="5"/>
-            <TextBox x:Name="txtCnpjCpf" Width="150" Margin="5"/>
-            <Button Content="Filtrar" Width="100" Margin="10" Click="Filtrar_Click"/>
-        </StackPanel>
+        <TabControl>
+            <!-- Aba de Listagem -->
+            <TabItem Header="Listagem de Parceiros">
+                <StackPanel>
+                    <!-- Campos de Filtro -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10">
+                        <TextBlock Text="Nome Fantasia:" VerticalAlignment="Center" Margin="5"/>
+                        <TextBox x:Name="txtNomeFantasia" Width="150" Margin="5"/>
+                        <TextBlock Text="Razão Social:" VerticalAlignment="Center" Margin="5"/>
+                        <TextBox x:Name="txtRazaoSocial" Width="150" Margin="5"/>
+                        <TextBlock Text="CNPJ/CPF:" VerticalAlignment="Center" Margin="5"/>
+                        <TextBox x:Name="txtCnpjCpf" Width="150" Margin="5"/>
+                        <Button Content="Filtrar" Width="100" Margin="10" Click="Filtrar_Click"/>
+                    </StackPanel>
 
-        <!-- Grid para Listar Parceiros -->
-        <DataGrid x:Name="dataGridParceiros" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,50,10,10">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Nome Fantasia" Binding="{Binding NomeFantasia}" Width="*"/>
-                <DataGridTextColumn Header="Razão Social" Binding="{Binding RazaoSocial}" Width="*"/>
-                <DataGridTextColumn Header="CNPJ/CPF" Binding="{Binding CnpjCpf}" Width="*"/>
+                    <!-- Grid para Listar Parceiros -->
+                    <DataGrid x:Name="dataGridParceiros" AutoGenerateColumns="False" IsReadOnly="True" Margin="10">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Nome Fantasia" Binding="{Binding NomeFantasia}" Width="*"/>
+                            <DataGridTextColumn Header="Razão Social" Binding="{Binding RazaoSocial}" Width="*"/>
+                            <DataGridTextColumn Header="CNPJ/CPF" Binding="{Binding CnpjCpf}" Width="*"/>
+                            <!-- Coluna de Ícone Editar -->
+                            <DataGridTemplateColumn Header="Editar" Width="50">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Source="pack://application:,,,/imgs/editIcon.png" Width="24" Height="24" Cursor="Hand" MouseDown="Editar_Click" Tag="{Binding Codigo}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <!-- Coluna de Ícone Excluir -->
+                            <DataGridTemplateColumn Header="Excluir" Width="50">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Source="pack://application:,,,/imgs/deleteIcon.png" Width="24" Height="24" Cursor="Hand" MouseDown="Excluir_Click" Tag="{Binding Codigo}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </TabItem>
 
-                <!-- Coluna de Ícone Editar -->
-                <DataGridTemplateColumn Header="Editar" Width="50">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Source="pack://application:,,,/imgs/editIcon.png" Width="24" Height="24" Cursor="Hand" MouseDown="Editar_Click" Tag="{Binding Codigo}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <!-- Coluna de Ícone Excluir -->
-                <DataGridTemplateColumn Header="Excluir" Width="50">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Source="pack://application:,,,/imgs/deleteIcon.png" Width="24" Height="24" Cursor="Hand" MouseDown="Excluir_Click" Tag="{Binding Codigo}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+            <!-- Aba de Edição -->
+            <TabItem Header="Edição de Parceiro">
+                <StackPanel Margin="10">
+                    <TextBlock Text="Nome Fantasia:" VerticalAlignment="Center" Margin="5"/>
+                    <TextBox x:Name="txtNomeFantasiaEdicao" Width="300" Margin="5"/>
+                    <TextBlock Text="Razão Social:" VerticalAlignment="Center" Margin="5"/>
+                    <TextBox x:Name="txtRazaoSocialEdicao" Width="300" Margin="5"/>
+                    <TextBlock Text="CNPJ/CPF:" VerticalAlignment="Center" Margin="5"/>
+                    <TextBox x:Name="txtCnpjCpfEdicao" Width="300" Margin="5"/>
+                    <Button Content="Salvar" Width="100" Margin="10" Click="Salvar_Click"/>
+                    <Button Content="Cancelar" Width="100" Margin="10" Click="CancelarEdicao_Click"/>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

@@ -13,49 +13,9 @@ namespace MNT
     {
         private int? codigoParceiro; // Variável para armazenar o código do parceiro, se houver
 
-        // Construtor padrão
         public frmCadParceiroNegocio()
         {
             InitializeComponent();
-        }
-
-        // Construtor que aceita um parâmetro (o código do parceiro)
-        public frmCadParceiroNegocio(int codigoParceiro)
-        {
-            InitializeComponent();
-            this.codigoParceiro = codigoParceiro;
-
-            // Carregar dados do parceiro com base no código
-            CarregarDadosParceiro(codigoParceiro);
-        }
-
-        // Método para carregar dados do parceiro para edição
-        private void CarregarDadosParceiro(int codigo)
-        {
-            try
-            {
-                using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["PostgreSQLConnection"].ConnectionString))
-                {
-                    conn.Open();
-                    using (var cmd = new NpgsqlCommand("SELECT * FROM tb_cad_parceiro_negocio WHERE codigo = @codigo", conn))
-                    {
-                        cmd.Parameters.AddWithValue("codigo", codigo);
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                txtNomeFantasia.Text = reader["nome_fantasia"].ToString();
-                                txtRazaoSocial.Text = reader["razao_social"].ToString();
-                                txtCnpjCpf.Text = reader["cnpj_cpf"].ToString();
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao carregar dados do parceiro: {ex.Message}");
-            }
         }
 
         private void Filtrar_Click(object sender, RoutedEventArgs e)
@@ -106,11 +66,55 @@ namespace MNT
         private void Editar_Click(object sender, MouseButtonEventArgs e)
         {
             Image image = (Image)sender;
-            int codigoParceiro = (int)image.Tag;
+            codigoParceiro = (int)image.Tag;
 
-            // Instanciar a janela de edição passando o código do parceiro
-            frmCadParceiroNegocio editarParceiroWindow = new frmCadParceiroNegocio(codigoParceiro);
-            editarParceiroWindow.Show();
+            // Carregar os dados na aba de edição
+            CarregarDadosParceiro(codigoParceiro.Value);
+
+            // Alternar para a aba de edição
+            ((TabControl)this.Content).SelectedIndex = 1;
+        }
+
+        // Método para carregar dados do parceiro para edição
+        private void CarregarDadosParceiro(int codigo)
+        {
+            try
+            {
+                using (var conn = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["PostgreSQLConnection"].ConnectionString))
+                {
+                    conn.Open();
+                    using (var cmd = new NpgsqlCommand("SELECT * FROM tb_cad_parceiro_negocio WHERE codigo = @codigo", conn))
+                    {
+                        cmd.Parameters.AddWithValue("codigo", codigo);
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                txtNomeFantasiaEdicao.Text = reader["nome_fantasia"].ToString();
+                                txtRazaoSocialEdicao.Text = reader["razao_social"].ToString();
+                                txtCnpjCpfEdicao.Text = reader["cnpj_cpf"].ToString();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao carregar dados do parceiro: {ex.Message}");
+            }
+        }
+
+        // Evento para salvar o parceiro
+        private void Salvar_Click(object sender, RoutedEventArgs e)
+        {
+            // Implementação do salvamento do parceiro no banco de dados
+        }
+
+        // Evento para cancelar a edição
+        private void CancelarEdicao_Click(object sender, RoutedEventArgs e)
+        {
+            // Alternar para a aba de listagem
+            ((TabControl)this.Content).SelectedIndex = 0;
         }
 
         // Evento para excluir o parceiro
